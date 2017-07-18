@@ -10,25 +10,25 @@ angular
               controller: 'IndexController',
               controllerAs: 'vm'
           })
-          .state("index", {
+          .state("ArticleIndex", {
               url: '/articles',
               templateUrl: '/public/js/ng-views/articles/index.html',
               controller: 'ArticleIndexController',
               controllerAs: 'vm'
           })
-          .state("show",{
+          .state("ArticleShow",{
               url: '/articles/:title',
               templateUrl: '/public/js/ng-views/articles/show.html',
               controller: 'ArticleShowController',
               controllerAs: 'vm'
           })
-          .state("index", {
+          .state("MusicIndex", {
               url: '/music',
               templateUrl: '/public/js/ng-views/music/index.html',
               controller: 'MusicIndexController',
               controllerAs: 'vm'
           })
-          .state("show",{
+          .state("MusicShow",{
               url: '/music/:title',
               templateUrl: '/public/js/ng-views/music/show.html',
               controller: 'MusicShowController',
@@ -36,6 +36,9 @@ angular
           })
     }
   ])
+  .controller('IndexController', ['ArticleFactory', function(ArticleFactory) {
+    console.log('Landing Index')
+}])
   .controller("ArticleIndexController",["$state", "ArticleFactory", function($state, ArticleFactory){
         console.log('Index Controller Working');
         this.articles = ArticleFactory.query();
