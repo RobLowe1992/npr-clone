@@ -1,37 +1,64 @@
 angular
   .module("npr",["ui.router","ngResource", "react"])
-  .config([
-    "$stateProvider", function($stateProvider){
+  .config(["$stateProvider", "$locationProvider", function($stateProvider, $locationProvider){
       console.log("router working");
+      $locationProvider.hashPrefix('');
       $stateProvider
           .state("landing", {
               url: '/',
-              templateUrl: '/assets/js/ng-views/welcome.html'
+              templateUrl: '/public/js/ng-views//landing/index.html',
+              controller: 'IndexController',
+              controllerAs: 'vm'
           })
           .state("index", {
               url: '/articles',
-              templateUrl: '/assets/js/ng-views/index.html',
-              controller: 'IndexController',
+              templateUrl: '/public/js/ng-views/articles/index.html',
+              controller: 'ArticleIndexController',
               controllerAs: 'vm'
           })
           .state("show",{
               url: '/articles/:title',
-              templateUrl: '/assets/js/ng-views/show.html',
-              controller: 'ShowController',
+              templateUrl: '/public/js/ng-views/articles/show.html',
+              controller: 'ArticleShowController',
+              controllerAs: 'vm'
+          })
+          .state("index", {
+              url: '/music',
+              templateUrl: '/public/js/ng-views/music/index.html',
+              controller: 'MusicIndexController',
+              controllerAs: 'vm'
+          })
+          .state("show",{
+              url: '/music/:title',
+              templateUrl: '/public/js/ng-views/music/show.html',
+              controller: 'MusicShowController',
               controllerAs: 'vm'
           })
     }
   ])
-  .controller("IndexController",["$state", "EventFactory", function($state, ArticleFactory){
+  .controller("ArticleIndexController",["$state", "ArticleFactory", function($state, ArticleFactory){
         console.log('Index Controller Working');
         this.articles = ArticleFactory.query();
   }])
-  .controller("ShowController", ["ArticleFactory", "$state", "$stateParams", function(ArticleFactory, $state, $stateParams){
+  .controller("ArticleShowController", ["ArticleFactory", "$state", "$stateParams", function(ArticleFactory, $state, $stateParams){
         this.article = ArticleFactory.query({title: $stateParams.title})
   }])
-  .factory("EventFactory",["$resource", function($resource){
+  .controller("MusicIndexController",["$state", "MusicFactory", function($state, MusicFactory){
+        console.log('Index Controller Working');
+        this.music = MusicFactory.query();
+  }])
+  .controller("MusicShowController", ["MusicFactory", "$state", "$stateParams", function(MusicFactory, $state, $stateParams){
+        this.music = MusicFactory.query({title: $stateParams.title})
+  }])
+  .factory("ArticleFactory",["$resource", function($resource){
     console.log('factory working')
         return $resource("api/articles/:title", {}, {
+            update: { method: "PUT"}
+        })
+  }])
+  .factory("MusicFactory",["$resource", function($resource){
+        console.log('factory working')
+        return $resource("api/music/:title", {}, {
             update: { method: "PUT"}
         })
   }])
