@@ -10,60 +10,40 @@ angular
               controller: 'IndexController',
               controllerAs: 'vm'
           })
-          .state("ArticleIndex", {
-              url: '/articles',
-              templateUrl: '/public/js/ng-views/articles/index.html',
-              controller: 'ArticleIndexController',
+          .state("ThreadIndex", {
+              url: '/threads',
+              templateUrl: '/public/js/ng-views/threads/index.html',
+              controller: 'ThreadIndexController',
               controllerAs: 'vm'
           })
-          .state("ArticleShow",{
-              url: '/articles/:title',
-              templateUrl: '/public/js/ng-views/articles/show.html',
-              controller: 'ArticleShowController',
-              controllerAs: 'vm'
-          })
-          .state("MusicIndex", {
-              url: '/music',
-              templateUrl: '/public/js/ng-views/music/index.html',
-              controller: 'MusicIndexController',
-              controllerAs: 'vm'
-          })
-          .state("MusicShow",{
-              url: '/music/:title',
-              templateUrl: '/public/js/ng-views/music/show.html',
-              controller: 'MusicShowController',
+          .state("ThreadShow",{
+              url: '/threads/:id',
+              templateUrl: '/public/js/ng-views/threads/show.html',
+              controller: 'ThreadShowController',
               controllerAs: 'vm'
           })
     }
   ])
-  .controller('IndexController', ['ArticleFactory', function(ArticleFactory) {
-    console.log('Landing Index')
+  .controller("IndexController", ['ThreadFactory', function(ThreadFactory) {
 }])
-  .controller("ArticleIndexController",["$state", "ArticleFactory", function($state, ArticleFactory){
-        console.log('Index Controller Working');
-        this.articles = ArticleFactory.query();
-  }])
-  .controller("ArticleShowController", ["ArticleFactory", "$state", "$stateParams", function(ArticleFactory, $state, $stateParams){
-        this.article = ArticleFactory.query({title: $stateParams.title})
-  }])
-  .controller("MusicIndexController",["$state", "MusicFactory", function($state, MusicFactory){
-        console.log('Index Controller Working');
-        this.music = MusicFactory.query();
-  }])
-  .controller("MusicShowController", ["MusicFactory", "$state", "$stateParams", function(MusicFactory, $state, $stateParams){
-        this.music = MusicFactory.query({title: $stateParams.title})
-  }])
-  .factory("ArticleFactory",["$resource", function($resource){
-    console.log('factory working')
-        return $resource("api/articles/:title", {}, {
-            update: { method: "PUT"}
+  .controller("ThreadIndexController",["$state", "ThreadFactory", function($state, ThreadFactory){
+      this.threads = ThreadFactory.query();
+      this.newThread = new ThreadFactory.query()
+      this.createThread = ()=>{
+        this.newThread.$save().then((thread)=>{
+          $state.go('ThreadShow', {id: event.id})
         })
+      }
+
   }])
-  .factory("MusicFactory",["$resource", function($resource){
-        console.log('factory working')
-        return $resource("api/music/:title", {}, {
-            update: { method: "PUT"}
-        })
+  .controller("ThreadShowController", ["ThreadFactory", "$state", "$stateParams", function(ThreadFactory, $state, $stateParams){
+      this.thread = ThreadFactory.get({id: $stateParams.id})
+      console.log(this.thread)
+  }])
+  .factory("ThreadFactory",["$resource", function($resource){
+    return $resource("api/threads/:id", {}, {
+      update: { method: "PUT"}
+    });
   }])
 //
 // function IndexControllerFunction($state, EventFactory){

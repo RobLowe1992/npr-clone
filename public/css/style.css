@@ -1,0 +1,9 @@
+.thread{
+    cursor: pointer;
+    padding-bottom: 1em;
+    border-bottom: .1em #efefef solid;
+    padding-left: 20px
+}
+.thread:hover{
+    background-color: #fffbec;
+}

@@ -1,0 +1,12 @@
+<h1>Hello Thread Index</h1>
+
+<ul class="pagination">
+    <li data-ng-repeat="thread in vm.threads" class="page-item">
+        <div class="thread page-link" data-ui-sref="ThreadShow({id: thread._id})">
+            <h3 class="threadTitle">{{thread.title}}</h3>
+            <h4 class="threadAuthor">{{thread.author}}</h4>
+            <div class="threadLikes">Likes: {{thread.likes}}</div>
+            <div class="threadViews">Views: {{thread.views}}</div>
+        </div>
+    </li>
+</ul>

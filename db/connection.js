@@ -1,23 +1,32 @@
 var mongoose  = require("mongoose");
 
+var PostSchema = new mongoose.Schema({
+    description: String,
+    author: String,
+    likes: Number,
+    createdDate: Date
+});
 
-var ArticleSchema = new mongoose.Schema(
-  {
+var ThreadSchema = new mongoose.Schema({
     title: String,
     description: String,
-    img_url: String,
-    img_author: String,
-    audio: String
-  }
-)
+    tags: Array,
+    author: String,
+    likes: Number,
+    views: Number,
+    createdDate: Date,
+    posts: [PostSchema]
+});
 
 
 
-var ArticleModel = mongoose.model("Article", ArticleSchema);
 
+var PostModel = mongoose.model("Post", PostSchema);
+var ThreadModel = mongoose.model("Thread", ThreadSchema);
 
 module.exports = {
-  ArticleModel: ArticleModel
+    PostModel: PostModel,
+    ThreadModel: ThreadModel
 }
 
-mongoose.connect("mongodb://localhost/nprClone");
+mongoose.connect("mongodb://localhost/blogSite");

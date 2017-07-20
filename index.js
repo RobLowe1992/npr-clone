@@ -3,7 +3,8 @@ var parser = require("body-parser");
 var mongoose = require("./db/connection");
 var app = express();
 
-const Article = mongoose.ArticleModel;
+const Post = mongoose.PostModel;
+const Thread = mongoose.ThreadModel;
 
 app.set('port', process.env.PORT || 8080)
 app.use(parser.json({extended: true}));
@@ -16,54 +17,58 @@ app.get("/", function(req, res){
   res.render("index");
 });
 
-app.get("/api/articles", function(req,res){
-    Article.find({}).then((articles)=>{
-        res.json(articles);
+app.get("/api/threads", function(req,res){
+    Thread.find({}).then((threads)=>{
+        res.json(threads);
     });
 });
-app.get("/api/music", function(req,res){
-    Music.find({}).then((musics)=>{
-        res.json(musics);
-});
-});
-app.get("/api/articles/:title", function(req,res){
-    Article.findOne({title: req.params.title}).then((article)=>{
-        res.json(article);
+app.get("/api/threads/:id", function(req,res){
+    Thread.findOne({_id: req.params.id}).then((thread)=>{
+        res.json(thread);
     });
 });
-app.get("/api/music/:title", function(req,res){
-    Music.findOne({title: req.params.title}).then((music)=>{
-        res.json(music);
-});
-});
-app.post("/api/articles", function(req,res){
-    Article.create(req.body).then((article)=>{
-        res.json(article);
+app.get("/api/threads/:thread_id/posts", function(req,res){
+    Thread.findOne({_id: req.params.thread_id}).then((thread)=> {
+        res.json(thread.posts);
     });
 });
-app.post("/api/music", function(req,res){
-    Music.create(req.body).then((music)=>{
-        res.json(music);
+app.get("/api/threads/:thread_id/posts/:id", function(req,res){
+    Thread.findOne({_id: req.params.thread_id}).then((thread)=> {
+        for(let i = 0; i < thread.posts.length; i++){
+            if(thread.posts[i]._id == req.params.id){
+                res.json(thread.posts[i])
+            }
+        }
     });
 });
-app.delete("/api/articles/:title", function(req,res){
-    Article.findOneAndRemove({title: req.params.title}).then(()=>{
+app.post("/api/threads", function(req,res){
+    Thread.create(req.body).then((thread)=>{
+        res.json(thread);
+    });
+});
+app.post("/api/post", function(req,res){
+    Post.create(req.body).then((post)=>{
+        res.json(post);
+    });
+});
+app.delete("/api/threads/:title", function(req,res){
+    Thread.findOneAndRemove({title: req.params.title}).then(()=>{
         res.json({success: true});
     });
 });
-app.delete("/api/music/:title", function(req,res){
-    Article.findOneAndRemove({title: req.params.title}).then(()=>{
+app.delete("/api/post/:title", function(req,res){
+    Thread.findOneAndRemove({title: req.params.title}).then(()=>{
         res.json({success: true});
 });
 });
-app.put("/api/articles/:title", function(req,res){
-    Article.findOneAndUpdate({title: req.params.title}, req.body, {new: true}).then((article)=>{
-        res.json(article);
+app.put("/api/threads/:title", function(req,res){
+    Thread.findOneAndUpdate({title: req.params.title}, req.body, {new: true}).then((thread)=>{
+        res.json(thread);
     });
 });
-app.put("/api/music/:title", function(req,res){
-    Article.findOneAndUpdate({title: req.params.title}, req.body, {new: true}).then((music)=>{
-        res.json(music);
+app.put("/api/post/:title", function(req,res){
+    Thread.findOneAndUpdate({title: req.params.title}, req.body, {new: true}).then((post)=>{
+        res.json(post);
     });
 });
 app.listen(8080, ()=> {

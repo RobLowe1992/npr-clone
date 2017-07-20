@@ -1,0 +1,15 @@
+<h1>Hello Thread Show</h1>
+<section>
+    <h2>{{vm.thread.title}}</h2>
+    <h3>{{vm.thread.author}}</h3>
+    <p>{{vm.thread.description}}</p>
+    <ul>
+        <li data-ng-repeat="comment in vm.thread.posts">
+            <div>
+                <p>{{comment.author}}</p>
+                <p>{{comment.description}}</p>
+                <p>{{comment.likes}}</p>
+            </div>
+        </li>
+    </ul>
+</section>
